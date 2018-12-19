@@ -27,14 +27,14 @@ go get -u github.com/sgreben/docker-compose-hosts
 
 ```sh
 # Linux
-curl -L https://github.com/sgreben/docker-compose-hosts/releases/download/0.0.1/docker-compose-hosts_0.0.1_linux_x86_64.tar.gz | tar xz
+curl -L https://github.com/sgreben/docker-compose-hosts/releases/download/0.0.2/docker-compose-hosts_0.0.2_linux_x86_64.tar.gz | tar xz
 
 # OS X
-curl -L https://github.com/sgreben/docker-compose-hosts/releases/download/0.0.1/docker-compose-hosts_0.0.1_osx_x86_64.tar.gz | tar xz
+curl -L https://github.com/sgreben/docker-compose-hosts/releases/download/0.0.2/docker-compose-hosts_0.0.2_osx_x86_64.tar.gz | tar xz
 
 # Windows
-curl -LO https://github.com/sgreben/docker-compose-hosts/releases/download/0.0.1/docker-compose-hosts_0.0.1_windows_x86_64.zip
-unzip docker-compose-hosts_0.0.1_windows_x86_64.zip
+curl -LO https://github.com/sgreben/docker-compose-hosts/releases/download/0.0.2/docker-compose-hosts_0.0.2_windows_x86_64.zip
+unzip docker-compose-hosts_0.0.2_windows_x86_64.zip
 ```
 
 ## Usage
