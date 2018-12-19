@@ -1,6 +1,6 @@
 # ${APP}
 
-Work with docker-compose manifests for multiple hosts. Supports SSH-tunnelled connections to the Docker daemon(s) via the [sshtunnel](github.com/sgreben/sshtunnel) library.
+Work with docker-compose manifests for multiple hosts. Supports SSH-tunnelled connections to the Docker daemon(s) via the [sshtunnel](https://github.com/sgreben/sshtunnel) library.
 
 ## Contents
 
