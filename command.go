@@ -178,10 +178,7 @@ func (c *ConfigV1ProjectTunnel) Establish(ctx context.Context, addr string) (net
 			&net.TCPAddr{IP: net.ParseIP("127.0.0.1")},
 			"unix", addr,
 			&tunnelConfig,
-			sshtunnel.ConfigBackoff{
-				Min: flags.SSHReconnectBackoffMin,
-				Max: flags.SSHReconnectBackoffMax,
-			})
+			flags.SSHReconnectBackoff)
 		return listener, errCh, err
 	default:
 		return nil, nil, fmt.Errorf("error: empty connection block")

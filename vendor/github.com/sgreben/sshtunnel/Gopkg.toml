@@ -22,13 +22,9 @@
 
 
 [[constraint]]
-  name = "github.com/sgreben/sshtunnel"
-  version = "1.0.0"
+  branch = "master"
+  name = "github.com/google/shlex"
 
 [[constraint]]
   branch = "master"
   name = "golang.org/x/crypto"
-
-[[constraint]]
-  name = "gopkg.in/yaml.v2"
-  version = "2.2.2"

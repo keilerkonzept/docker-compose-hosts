@@ -2,10 +2,10 @@
 
 
 [[projects]]
-  name = "github.com/sgreben/sshtunnel"
-  packages = [".","backoff","connpipe"]
-  revision = "adffbe2b08a03a7a302fe8a6d0c1daa200eff0f4"
-  version = "1.0.0"
+  branch = "master"
+  name = "github.com/google/shlex"
+  packages = ["."]
+  revision = "c34317bd91bf98fab745d77b03933cf8769299fe"
 
 [[projects]]
   branch = "master"
@@ -13,15 +13,9 @@
   packages = ["curve25519","ed25519","ed25519/internal/edwards25519","internal/chacha20","internal/subtle","poly1305","ssh","ssh/agent"]
   revision = "505ab145d0a99da450461ae2c1a9f6cd10d1f447"
 
-[[projects]]
-  name = "gopkg.in/yaml.v2"
-  packages = ["."]
-  revision = "51d6538a90f86fe93ac480b35f37b2be17fef232"
-  version = "v2.2.2"
-
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "2e6d79c25e65fd06dc293685796ccf9c86d90c45078214ddfc80776579ac1de8"
+  inputs-digest = "5193461e837959f3be0accae4ecb0055e1eff0c48399cc3a07f1d48f75eaea8d"
   solver-name = "gps-cdcl"
   solver-version = 1

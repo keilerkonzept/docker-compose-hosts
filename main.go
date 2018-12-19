@@ -10,6 +10,8 @@ import (
 	"sort"
 	"time"
 
+	"github.com/sgreben/sshtunnel/backoff"
+
 	"gopkg.in/yaml.v2"
 )
 
@@ -17,17 +19,15 @@ var (
 	appName = "docker-compose-hosts"
 	version = "SNAPSHOT"
 	flags   struct {
-		Quiet                    bool
-		Verbose                  bool
-		Version                  bool
-		Parallel                 bool
-		File                     string
-		SSHReconnectBackoffMin   time.Duration
-		SSHReconnectBackoffMax   time.Duration
-		SSHReconnectBackoffLimit int
-		RemoteSocketAddr         string
-		SSHAgentAddr             string
-		SSHKnownHostsFile        string
+		Quiet               bool
+		Verbose             bool
+		Version             bool
+		Parallel            bool
+		File                string
+		SSHReconnectBackoff backoff.Config
+		RemoteSocketAddr    string
+		SSHAgentAddr        string
+		SSHKnownHostsFile   string
 	}
 	config            ConfigV1
 	configVersionsMap = map[string]bool{
@@ -50,9 +50,9 @@ func init() {
 	flags.File = "docker-compose-hosts.yml"
 	flags.SSHAgentAddr = os.Getenv("SSH_AUTH_SOCK")
 	flags.RemoteSocketAddr = "unix:///var/run/docker.sock"
-	flags.SSHReconnectBackoffMin = 250 * time.Millisecond
-	flags.SSHReconnectBackoffMax = 15 * time.Second
-	flags.SSHReconnectBackoffLimit = 8
+	flags.SSHReconnectBackoff.Min = 250 * time.Millisecond
+	flags.SSHReconnectBackoff.Max = 15 * time.Second
+	flags.SSHReconnectBackoff.MaxAttempts = 8
 	flag.BoolVar(&flags.Quiet, "logs-off", flags.Quiet, "disable all logging")
 	flag.BoolVar(&flags.Parallel, "parallel", flags.Parallel, "run commands in parallel")
 	flag.BoolVar(&flags.Quiet, "q", flags.Quiet, "(alias for -logs-off)")
@@ -62,9 +62,9 @@ func init() {
 	flag.StringVar(&flags.SSHAgentAddr, "ssh-agent-addr", flags.SSHAgentAddr, "ssh-agent socket address ($SSH_AUTH_SOCK)")
 	flag.StringVar(&flags.File, "file", flags.File, "specify an alternate compose-hosts file")
 	flag.StringVar(&flags.File, "f", flags.File, "(alias for -file)")
-	flag.DurationVar(&flags.SSHReconnectBackoffMin, "backoff-min", flags.SSHReconnectBackoffMin, "initial back-off delay for retries for failed ssh connections")
-	flag.DurationVar(&flags.SSHReconnectBackoffMax, "backoff-max", flags.SSHReconnectBackoffMax, "maximum back-off delay for retries for failed ssh connections")
-	flag.IntVar(&flags.SSHReconnectBackoffLimit, "backoff-attempts", flags.SSHReconnectBackoffLimit, "maximum number of retries for failed ssh connections")
+	flag.DurationVar(&flags.SSHReconnectBackoff.Min, "backoff-min", flags.SSHReconnectBackoff.Min, "initial back-off delay for retries for failed ssh connections")
+	flag.DurationVar(&flags.SSHReconnectBackoff.Max, "backoff-max", flags.SSHReconnectBackoff.Max, "maximum back-off delay for retries for failed ssh connections")
+	flag.IntVar(&flags.SSHReconnectBackoff.MaxAttempts, "backoff-attempts", flags.SSHReconnectBackoff.MaxAttempts, "maximum number of retries for failed ssh connections")
 	flag.Parse()
 	if flags.Quiet {
 		log.SetOutput(ioutil.Discard)
