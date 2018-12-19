@@ -10,6 +10,8 @@ import (
 	"path/filepath"
 	"sync"
 
+	"golang.org/x/crypto/ssh"
+
 	"github.com/sgreben/sshtunnel"
 )
 
@@ -110,6 +112,8 @@ func (p *ConfigV1Project) Command(args []string) error {
 func (c *ConfigV1ProjectTunnel) Establish(ctx context.Context, addr string) (net.Listener, chan error, error) {
 	switch {
 	case c.SSH != nil:
+		var clientConfig ssh.ClientConfig
+		clientConfig.HostKeyCallback = ssh.InsecureIgnoreHostKey()
 		ssh := c.SSH
 		sshHost, err := expandEnv(ssh.Host)
 		if err != nil {
@@ -119,18 +123,14 @@ func (c *ConfigV1ProjectTunnel) Establish(ctx context.Context, addr string) (net
 		if err != nil {
 			return nil, nil, err
 		}
-		tunnelConfig := sshtunnel.Config{
-			SSHAddr: sshHost,
-			Auth: sshtunnel.ConfigAuth{
-				UserName: userName,
-			},
-		}
+		clientConfig.User = userName
+		authConfig := &sshtunnel.ConfigAuth{}
 		if ssh.UseAgent {
 			agentAddr, err := expandEnv(flags.SSHAgentAddr)
 			if err != nil {
 				return nil, nil, err
 			}
-			tunnelConfig.Auth.SSHAgent = &sshtunnel.ConfigAuthSSHAgent{
+			authConfig.SSHAgent = &sshtunnel.ConfigSSHAgent{
 				Addr: &net.UnixAddr{
 					Net:  "unix",
 					Name: agentAddr,
@@ -142,7 +142,7 @@ func (c *ConfigV1ProjectTunnel) Establish(ctx context.Context, addr string) (net
 			if err != nil {
 				return nil, nil, err
 			}
-			tunnelConfig.Auth.Password = &password
+			authConfig.Password = &password
 		}
 		if ssh.KeyFile != nil {
 			path, err := expandEnv(*ssh.KeyFile)
@@ -158,18 +158,27 @@ func (c *ConfigV1ProjectTunnel) Establish(ctx context.Context, addr string) (net
 				passphraseBytes := []byte(passphraseString)
 				passphrase = &passphraseBytes
 			}
-			tunnelConfig.Auth.Keys = []sshtunnel.ConfigAuthKey{
+			authConfig.Keys = []sshtunnel.KeySource{
 				{
 					Path:       &path,
 					Passphrase: passphrase,
 				},
 			}
 		}
+		clientConfig.Auth, err = authConfig.Methods()
+		if err != nil {
+			return nil, nil, err
+		}
+		tunnelConfig := sshtunnel.Config{
+			SSHAddr:   sshHost,
+			SSHClient: &clientConfig,
+		}
 		listener, errCh, err := sshtunnel.ListenContext(
 			ctx,
 			&net.TCPAddr{IP: net.ParseIP("127.0.0.1")},
 			"unix", addr,
-			&tunnelConfig, sshtunnel.ConfigBackoff{
+			&tunnelConfig,
+			sshtunnel.ConfigBackoff{
 				Min: flags.SSHReconnectBackoffMin,
 				Max: flags.SSHReconnectBackoffMax,
 			})
