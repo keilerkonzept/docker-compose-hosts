@@ -27,14 +27,14 @@ go get -u github.com/sgreben/docker-compose-hosts
 
 ```sh
 # Linux
-curl -L https://github.com/sgreben/docker-compose-hosts/releases/download/0.0.7/docker-compose-hosts_0.0.7_linux_x86_64.tar.gz | tar xz
+curl -L https://github.com/sgreben/docker-compose-hosts/releases/download/0.0.8/docker-compose-hosts_0.0.8_linux_x86_64.tar.gz | tar xz
 
 # OS X
-curl -L https://github.com/sgreben/docker-compose-hosts/releases/download/0.0.7/docker-compose-hosts_0.0.7_osx_x86_64.tar.gz | tar xz
+curl -L https://github.com/sgreben/docker-compose-hosts/releases/download/0.0.8/docker-compose-hosts_0.0.8_osx_x86_64.tar.gz | tar xz
 
 # Windows
-curl -LO https://github.com/sgreben/docker-compose-hosts/releases/download/0.0.7/docker-compose-hosts_0.0.7_windows_x86_64.zip
-unzip docker-compose-hosts_0.0.7_windows_x86_64.zip
+curl -LO https://github.com/sgreben/docker-compose-hosts/releases/download/0.0.8/docker-compose-hosts_0.0.8_windows_x86_64.zip
+unzip docker-compose-hosts_0.0.8_windows_x86_64.zip
 ```
 
 ## Usage
@@ -68,6 +68,14 @@ Usage of docker-compose-hosts:
   -q	(alias for -logs-off)
   -ssh-agent-addr string
     	ssh-agent socket address ($SSH_AUTH_SOCK)
+  -ssh-app string
+    	use an external ssh client application (default: use native (go) ssh client)
+  -ssh-app-extra-args string
+    	extra CLI arguments for external ssh clients
+  -ssh-app-openssh ssh
+    	use the openssh ssh CLI ("ssh -nNT -L \"{{.LocalIP}}:{{.LocalPort}}:{{.RemoteAddr}}\" -p \"{{.SSHPort}}\"  \"{{.User}}@{{.SSHHost}}\" {{.ExtraArgs}}") (default: use native (go) ssh client)
+  -ssh-app-putty
+    	use the PuTTY CLI ("putty -ssh -NT \"{{.User}}@{{.SSHHost}}\" -P \"{{.SSHPort}}\"  -L \"{{.LocalIP}}:{{.LocalPort}}:{{.RemoteAddr}}\" {{.ExtraArgs}}")  (default: use native (go) ssh client)
   -v	(alias for -logs-verbose)
   -version
     	print version and exit

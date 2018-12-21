@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/sgreben/sshtunnel/backoff"
+	sshtunnelExec "github.com/sgreben/sshtunnel/exec"
 
 	"gopkg.in/yaml.v2"
 )
@@ -19,15 +20,19 @@ var (
 	appName = "docker-compose-hosts"
 	version = "SNAPSHOT"
 	flags   struct {
-		Quiet               bool
-		Verbose             bool
-		Version             bool
-		Parallel            bool
-		File                string
-		SSHReconnectBackoff backoff.Config
-		RemoteSocketAddr    string
-		SSHAgentAddr        string
-		SSHKnownHostsFile   string
+		Quiet                      bool
+		Verbose                    bool
+		Version                    bool
+		Parallel                   bool
+		File                       string
+		SSHReconnectBackoff        backoff.Config
+		RemoteSocketAddr           string
+		SSHAgentAddr               string
+		SSHKnownHostsFile          string
+		SSHExternalClient          string
+		SSHExternalClientExtraArgs string
+		SSHExternalClientOpenSSH   bool
+		SSHExternalClientPuTTY     bool
 	}
 	config            ConfigV1
 	configVersionsMap = map[string]bool{
@@ -65,6 +70,11 @@ func init() {
 	flag.DurationVar(&flags.SSHReconnectBackoff.Min, "backoff-min", flags.SSHReconnectBackoff.Min, "initial back-off delay for retries for failed ssh connections")
 	flag.DurationVar(&flags.SSHReconnectBackoff.Max, "backoff-max", flags.SSHReconnectBackoff.Max, "maximum back-off delay for retries for failed ssh connections")
 	flag.IntVar(&flags.SSHReconnectBackoff.MaxAttempts, "backoff-attempts", flags.SSHReconnectBackoff.MaxAttempts, "maximum number of retries for failed ssh connections")
+	flag.StringVar(&flags.SSHExternalClient, "ssh-app", flags.SSHExternalClient, "use an external ssh client application (default: use native (go) ssh client)")
+	flag.StringVar(&flags.SSHExternalClientExtraArgs, "ssh-app-extra-args", flags.SSHExternalClientExtraArgs, "extra CLI arguments for external ssh clients")
+	flag.BoolVar(&flags.SSHExternalClientOpenSSH, "ssh-app-openssh", flags.SSHExternalClientOpenSSH, fmt.Sprintf("use the openssh `ssh` CLI (%q) (default: use native (go) ssh client)", sshtunnelExec.CommandTemplateOpenSSHText))
+	flag.BoolVar(&flags.SSHExternalClientPuTTY, "ssh-app-putty", flags.SSHExternalClientPuTTY, fmt.Sprintf("use the PuTTY CLI (%q)  (default: use native (go) ssh client)", sshtunnelExec.CommandTemplatePuTTYText))
+
 	flag.Parse()
 	if flags.Quiet {
 		log.SetOutput(ioutil.Discard)

@@ -9,10 +9,12 @@ import (
 	"os/exec"
 	"path/filepath"
 	"sync"
+	"text/template"
 
 	"golang.org/x/crypto/ssh"
 
 	"github.com/sgreben/sshtunnel"
+	sshtunnelExec "github.com/sgreben/sshtunnel/exec"
 )
 
 const dockerComposeCmd = "docker-compose"
@@ -66,7 +68,7 @@ func (p *ConfigV1Project) Command(args []string) error {
 	}
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	tunnelErrCh := make(chan error)
+	tunnelErrCh := make(<-chan error)
 	if p.DockerHostTunnel != nil {
 		listener, errCh, err := p.DockerHostTunnel.Establish(ctx, dockerHost)
 		if err != nil {
@@ -109,20 +111,51 @@ func (p *ConfigV1Project) Command(args []string) error {
 
 // Establish establishes a connection to a remote Docker daemon at `addr`, and
 // returns a local forwarding listener.
-func (c *ConfigV1ProjectTunnel) Establish(ctx context.Context, addr string) (net.Listener, chan error, error) {
+func (c *ConfigV1ProjectTunnel) Establish(ctx context.Context, addr string) (net.Listener, <-chan error, error) {
 	switch {
 	case c.SSH != nil:
+		sshHost, err := expandEnv(c.SSH.Host)
+		if err != nil {
+			return nil, nil, err
+		}
+		userName, err := expandEnv(c.SSH.UserName)
+		if err != nil {
+			return nil, nil, err
+		}
+		if flags.SSHExternalClientOpenSSH {
+			flags.SSHExternalClient = sshtunnelExec.CommandTemplateOpenSSHText
+		}
+		if flags.SSHExternalClientPuTTY {
+			flags.SSHExternalClient = sshtunnelExec.CommandTemplatePuTTYText
+		}
+		if flags.SSHExternalClient != "" {
+			commandTemplate, err := template.New("").Parse(flags.SSHExternalClient)
+			if err != nil {
+				return nil, nil, fmt.Errorf("parse ssh client command template: %v", err)
+			}
+			sshHostName, sshPort, err := net.SplitHostPort(sshHost)
+			if err != nil {
+				sshHostName, sshPort = sshHost, "22"
+			}
+			tunnelConfig := sshtunnelExec.Config{
+				User:             userName,
+				SSHHost:          sshHostName,
+				SSHPort:          sshPort,
+				CommandTemplate:  commandTemplate,
+				CommandExtraArgs: flags.SSHExternalClientExtraArgs,
+				Backoff:          flags.SSHReconnectBackoff,
+			}
+			listener, errCh, err := sshtunnelExec.ListenContext(
+				ctx,
+				&net.TCPAddr{IP: net.ParseIP("127.0.0.1")},
+				addr,
+				&tunnelConfig,
+			)
+			return listener, errCh, err
+		}
 		var clientConfig ssh.ClientConfig
 		clientConfig.HostKeyCallback = ssh.InsecureIgnoreHostKey()
 		ssh := c.SSH
-		sshHost, err := expandEnv(ssh.Host)
-		if err != nil {
-			return nil, nil, err
-		}
-		userName, err := expandEnv(ssh.UserName)
-		if err != nil {
-			return nil, nil, err
-		}
 		clientConfig.User = userName
 		authConfig := &sshtunnel.ConfigAuth{}
 		if ssh.UseAgent {
