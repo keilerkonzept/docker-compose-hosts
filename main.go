@@ -27,6 +27,7 @@ var (
 	configVersionsMap = map[string]bool{
 		"0":   true,
 		"0.1": true,
+		"1.0": true,
 	}
 	configVersions = func() (out []string) {
 		for v := range configVersionsMap {

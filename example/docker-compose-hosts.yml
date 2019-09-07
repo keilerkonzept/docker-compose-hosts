@@ -1,12 +1,7 @@
-version: '0.1'
+version: '1.0'
 projects:
   bar:
     compose_file: bar/docker-compose.yml
   foo:
     compose_file: foo/docker-compose.yml
     docker_host: /var/run/docker.sock
-    docker_host_tunnel:
-      ssh:
-        host: localhost:10022
-        user: $USER
-        agent: true

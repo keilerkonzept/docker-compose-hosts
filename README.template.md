@@ -56,7 +56,7 @@ ${USAGE}
 Example file with all fields below; see also [example/docker-compose-hosts.yml](example/docker-compose-hosts.yml).
 
 ```yaml
-version: '0.1'
+version: '1.0'
 projects:
   project-name-goes-here:
     compose_file: (path to docker-compose.yml)
