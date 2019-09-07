@@ -1,6 +1,6 @@
 # ${APP}
 
-Work with docker-compose manifests for multiple hosts. Supports SSH-tunnelled connections to the Docker daemon(s) via the [sshtunnel](https://github.com/sgreben/sshtunnel) library.
+Work with docker-compose manifests for multiple hosts.
 
 ## Contents
 
@@ -61,15 +61,9 @@ projects:
   project-name-goes-here:
     compose_file: (path to docker-compose.yml)
     docker_host: (value for DOCKER_HOST, optional)
-    docker_host_tunnel:
-      ssh:
-        host: (ssh host)
-        user: (ssh user)
-        host_key_file: (ssh host key file, optional)
-        agent: (ssh agent, boolean, optional)
-        password: (ssh password, optional)
-        key_file: (ssh key file, optional)
-        key_passphrase: (ssh key passphrase, optional)
+  another-project-name-goes-here:
+    compose_file: (path to docker-compose.yml)
+    docker_host: (value for DOCKER_HOST, optional)
 ```
 
 All string fields except `version` support `$ENVVARS`; A literal `$` can be produced using the escape `$$`.

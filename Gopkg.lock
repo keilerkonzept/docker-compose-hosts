@@ -2,18 +2,6 @@
 
 
 [[projects]]
-  name = "github.com/sgreben/sshtunnel"
-  packages = [".","backoff","connpipe"]
-  revision = "fb400e9a36513f8ecc66aeee92b75dce19daa59d"
-  version = "1.0.7"
-
-[[projects]]
-  branch = "master"
-  name = "golang.org/x/crypto"
-  packages = ["curve25519","ed25519","ed25519/internal/edwards25519","internal/chacha20","internal/subtle","poly1305","ssh","ssh/agent"]
-  revision = "505ab145d0a99da450461ae2c1a9f6cd10d1f447"
-
-[[projects]]
   name = "gopkg.in/yaml.v2"
   packages = ["."]
   revision = "51d6538a90f86fe93ac480b35f37b2be17fef232"
@@ -22,6 +10,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "2e2caf1e9b2cede239b611b1b76485d18e0dd32086ad8f03ffdec4b05f36964f"
+  inputs-digest = "c5fb90c08dfd63f786316efe19c5d2fd508a3ad1712184830052d4f3db861a84"
   solver-name = "gps-cdcl"
   solver-version = 1

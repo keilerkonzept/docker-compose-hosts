@@ -1,6 +1,6 @@
 # docker-compose-hosts
 
-Work with docker-compose manifests for multiple hosts. Supports SSH-tunnelled connections to the Docker daemon(s) via the [sshtunnel](https://github.com/sgreben/sshtunnel) library.
+Work with docker-compose manifests for multiple hosts.
 
 ## Contents
 
@@ -49,12 +49,6 @@ docker-compose-hosts [OPTIONS] -- [COMMAND [ARGS...]]
 
 ```text
 Usage of docker-compose-hosts:
-  -backoff-attempts int
-    	maximum number of retries for failed ssh connections (default 8)
-  -backoff-max duration
-    	maximum back-off delay for retries for failed ssh connections (default 15s)
-  -backoff-min duration
-    	initial back-off delay for retries for failed ssh connections (default 250ms)
   -f string
     	(alias for -file) (default "docker-compose-hosts.yml")
   -file string
@@ -66,16 +60,6 @@ Usage of docker-compose-hosts:
   -parallel
     	run commands in parallel
   -q	(alias for -logs-off)
-  -ssh-agent-addr string
-    	ssh-agent socket address ($SSH_AUTH_SOCK)
-  -ssh-app string
-    	use an external ssh client application (default: use native (go) ssh client)
-  -ssh-app-extra-args string
-    	extra CLI arguments for external ssh clients
-  -ssh-app-openssh ssh
-    	use the openssh ssh CLI ("ssh -nNT -L \"{{.LocalIP}}:{{.LocalPort}}:{{.RemoteAddr}}\" -p \"{{.SSHPort}}\"  \"{{.User}}@{{.SSHHost}}\" {{.ExtraArgs}}") (default: use native (go) ssh client)
-  -ssh-app-putty
-    	use the PuTTY CLI ("putty -ssh -NT \"{{.User}}@{{.SSHHost}}\" -P \"{{.SSHPort}}\"  -L \"{{.LocalIP}}:{{.LocalPort}}:{{.RemoteAddr}}\" {{.ExtraArgs}}")  (default: use native (go) ssh client)
   -v	(alias for -logs-verbose)
   -version
     	print version and exit
@@ -91,15 +75,9 @@ projects:
   project-name-goes-here:
     compose_file: (path to docker-compose.yml)
     docker_host: (value for DOCKER_HOST, optional)
-    docker_host_tunnel:
-      ssh:
-        host: (ssh host)
-        user: (ssh user)
-        host_key_file: (ssh host key file, optional)
-        agent: (ssh agent, boolean, optional)
-        password: (ssh password, optional)
-        key_file: (ssh key file, optional)
-        key_passphrase: (ssh key passphrase, optional)
+  another-project-name-goes-here:
+    compose_file: (path to docker-compose.yml)
+    docker_host: (value for DOCKER_HOST, optional)
 ```
 
 All string fields except `version` support `$ENVVARS`; A literal `$` can be produced using the escape `$$`.
