@@ -1,4 +1,4 @@
-VERSION = 0.0.8
+VERSION = 0.1.0
 
 APP      := docker-compose-hosts
 PACKAGES := $(shell go list -f {{.Dir}} ./...)
