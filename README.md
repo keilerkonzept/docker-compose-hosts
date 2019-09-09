@@ -18,22 +18,22 @@ Work with docker-compose manifests for multiple hosts.
 ### Using `go get`
 
 ```sh
-go get -u github.com/sgreben/docker-compose-hosts
+go get -u github.com/keilerkonzept/docker-compose-hosts
 ```
 
 ### Pre-built binary
 
-[Download a binary](https://github.com/sgreben/docker-compose-hosts/releases/latest) from the releases page or from the shell:
+[Download a binary](https://github.com/keilerkonzept/docker-compose-hosts/releases/latest) from the releases page or from the shell:
 
 ```sh
 # Linux
-curl -L https://github.com/sgreben/docker-compose-hosts/releases/download/0.1.1/docker-compose-hosts_0.1.1_linux_x86_64.tar.gz | tar xz
+curl -L https://github.com/keilerkonzept/docker-compose-hosts/releases/download/0.1.1/docker-compose-hosts_0.1.1_linux_x86_64.tar.gz | tar xz
 
 # OS X
-curl -L https://github.com/sgreben/docker-compose-hosts/releases/download/0.1.1/docker-compose-hosts_0.1.1_osx_x86_64.tar.gz | tar xz
+curl -L https://github.com/keilerkonzept/docker-compose-hosts/releases/download/0.1.1/docker-compose-hosts_0.1.1_osx_x86_64.tar.gz | tar xz
 
 # Windows
-curl -LO https://github.com/sgreben/docker-compose-hosts/releases/download/0.1.1/docker-compose-hosts_0.1.1_windows_x86_64.zip
+curl -LO https://github.com/keilerkonzept/docker-compose-hosts/releases/download/0.1.1/docker-compose-hosts_0.1.1_windows_x86_64.zip
 unzip docker-compose-hosts_0.1.1_windows_x86_64.zip
 ```
 

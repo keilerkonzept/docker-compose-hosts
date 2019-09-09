@@ -22,13 +22,5 @@
 
 
 [[constraint]]
-  name = "github.com/sgreben/sshtunnel"
-  version = "1.0.7"
-
-[[constraint]]
-  branch = "master"
-  name = "golang.org/x/crypto"
-
-[[constraint]]
   name = "gopkg.in/yaml.v2"
   version = "2.2.2"
